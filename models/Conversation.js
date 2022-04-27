@@ -4,12 +4,18 @@ const conversationSchema = mongoose.Schema(
     creator: {
       id: mongoose.Types.ObjectId,
       name: String,
-      avatar: String,
+      avatar: {
+        public_id: String,
+        url: String,
+      },
     },
     participant: {
       id: mongoose.Types.ObjectId,
       name: String,
-      avatar: String,
+      avatar: {
+        public_id: String,
+        url: String,
+      },
     },
     last_updated: {
       type: Date,

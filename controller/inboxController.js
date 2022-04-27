@@ -5,6 +5,7 @@ const escape = require("../utilities/escape");
 const User = require("../models/People");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
+const cloudinary = require("../utilities/cloudinary");
 // create inbox page
 exports.getInbox = async (req, res, next) => {
   // console.log('inbox hitted....mamun bro');
@@ -72,16 +73,24 @@ exports.searchUser = async (req, res, next) => {
 // creating conversation
 exports.addConversation = async (req, res, next) => {
   try {
+    // console.log(JSON.stringify(req.body.avatar.url));
+
     const newConversation = new Conversation({
       creator: {
         id: req.user.userId,
         name: req.user.username,
-        avatar: req.user.avatar,
+        avatar: {
+          public_id: req.user.avatar.public_id,
+          url: req.user.avatar.url,
+        },
       },
       participant: {
         id: req.body.id,
         name: req.body.participant,
-        avatar: req.body.avatar,
+        avatar: {
+          public_id: req.body.public_id,
+          url: req.body.url,
+        },
       },
     });
 
@@ -139,11 +148,32 @@ exports.sendMessage = async (req, res, next) => {
       let attachments = null;
       if (req.files && req.files.length > 0) {
         attachments = [];
+        console.log("path:" + req.files.path);
+
+        req.files.map(async(picture) => {
+
+          const result = await cloudinary.uploader.upload(
+            picture.path,
+              {
+              folder: "cs_research_chat/message_res",
+              use_filename: true,
+              unique_filename: false,
+            }
+          );          
+          
+            attachments.push({public_id: result.public_id,
+            url: result.url})
+
+        });
       }
 
-      req.files.forEach((file) => {
-        attachments.push(file.filename);
-      });
+      console.log(attachments);
+
+      // req.files.forEach((file) => {
+      //   attachments.push(result);
+      // });
+
+      console.log(`from send message controller: ${req.body.message}`);
 
       const newMessage = new Message({
         text: req.body.message,
@@ -151,12 +181,18 @@ exports.sendMessage = async (req, res, next) => {
         sender: {
           id: req.user.userId,
           name: req.user.username,
-          avatar: req.user.avatar || null,
+          avatar: {
+            public_id: req.user.avatar.public_id || null,
+            url: req.user.avatar.url,
+          },
         },
         receiver: {
           id: req.body.receiverId,
           name: req.body.receiverName,
-          avatar: req.body.avatar,
+          avatar: {
+            public_id: req.user.avatar.public_id || null,
+            url: req.user.avatar.url,
+          },
         },
         conversation_id: req.body.conversationId,
       });

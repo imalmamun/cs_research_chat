@@ -26,7 +26,7 @@
       <% if(loggedInUser && loggedInUser.avatar){ %>
       <div class="menu-item">
         <img
-          src="./uploads/avatars/<%= loggedInUser.avatar %>"
+          src="<%= loggedInUser.avatar.url %>"
           alt="<%= loggedInUser.username %>"
         />
 

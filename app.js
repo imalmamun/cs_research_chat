@@ -7,6 +7,8 @@ const cookieParser = require("cookie-parser");
 const moment = require("moment");
 const http = require("http");
 const io = require("socket.io");
+const cors = require("cors");
+
 // const ejsLint = require("ejs-lint");
 
 // internal imports
@@ -19,6 +21,13 @@ const app = express();
 const server = http.createServer(app);
 dotenv.config();
 
+// configuring cors
+// app.use(
+//   cors({
+//     origin: "*",
+//   })
+// );
+
 // socket creation
 global.io = io(server);
 
@@ -27,13 +36,10 @@ app.locals.moment = moment;
 
 // database connection
 mongoose
-  .connect(
-    "mongodb+srv://mamun:Q6vHZ3%40BqJHQqXy@cluster0.oebm4.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(process.env.MONGO_CONNECTION_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("database connection successful"))
   .catch((err) => {
     console.log("database connection error");

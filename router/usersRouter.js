@@ -31,7 +31,7 @@ router
     addUserValidator,
     addUserValidationHandler,
     addUser
-  )
-  router.route("/:id").delete(checkLogin, requireRole(["admin"]), removeUser);
+  );
+router.route("/:id").delete(checkLogin, requireRole(["admin"]), removeUser);
 
 module.exports = router;

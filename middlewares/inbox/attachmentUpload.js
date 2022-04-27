@@ -5,7 +5,7 @@ function avatarUpload(req, res, next) {
   const upload = uploader(
     "attachments",
     ["image/jpeg", "image/jpg", "image/png", "application/pdf"],
-    1000000,
+    2000000,
     2,
     "Only .jpg, jpeg or .png format allowed!"
   );

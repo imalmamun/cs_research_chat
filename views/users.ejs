@@ -29,7 +29,8 @@
                 <td class="name">
                   <% if(user.avatar){ %>
 
-                    <img src="./uploads/avatars/<%= user.avatar %>" />
+                    <!-- <img src="./uploads/avatars/<%= user.avatar %>" /> -->
+                    <img src="<%= user.avatar.url %>" />
                <% }else{ %>
                     <img src="./images/nophoto.png" />
                   <%}%>
