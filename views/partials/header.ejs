@@ -1,0 +1,63 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Al Mamun" />
+    <meta name="owner" content="almamunsheikh.com" />
+    <title><%= title %></title>
+    <link rel="shortcut icon" href="./images/myfavicon.jpg" />
+    <link rel="stylesheet" href="./stylesheets/toastify.css" />
+    <link rel="stylesheet" href="./stylesheets/style.css" />
+    <script src="./js/toastify.js"></script>
+    <script src="./js/moment.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script> -->
+  </head>
+  <body>
+    <div class="menu">
+      <% if(typeof loggedInUser == "undefined") { %>
+
+      <div class="menu-item"><a href="/inbox">Inbox</a></div>
+      <div class="menu-item"><a href="/users">Users</a></div>
+      <div class="menu-item"><a href="/">Login</a></div>
+      <% } else { %>
+      <div class="menu-item"><a href="/inbox">Inbox</a></div>
+      <div class="menu-item"><a href="/users">Users</a></div>
+      <% if(loggedInUser && loggedInUser.avatar){ %>
+      <div class="menu-item">
+        <img
+          src="./uploads/avatars/<%= loggedInUser.avatar %>"
+          alt="<%= loggedInUser.username %>"
+        />
+
+        <a href="/" onclick="logout()">Logout</a>
+      </div>
+
+      <% }else{ %>
+
+      <div class="menu-item">
+        <img src="./images/nophoto.png" alt="<%= loggedInUser.username %>" />
+        <a href="/" onclick="logout()">Logout</a>
+      </div>
+      <% } } %>
+    </div>
+
+    <script>
+      const logoutToast = Toastify({
+        text: "You are being logged out...",
+        duration: 3000,
+      });
+      function logout() {
+        console.log("hi");
+
+        fetch("/", {
+          method: "DELETE",
+        });
+        logoutToast.showToast();
+        setTimeout(() => {
+          window.location.replace("/");
+        }, 10000);
+      }
+    </script>
+  </body>
+</html>

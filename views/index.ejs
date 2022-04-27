@@ -1,0 +1,40 @@
+<%- include("./partials/header.ejs");%>
+
+    <!-- splitted header part from here ...undo... -->
+    <div id="login-container">
+      <div id="left-column"></div>
+      <div id="branding">
+        <img class="login_image"src="./images/almamun.jpeg" />
+        <h1>Login - Chat Application</h1>
+        <p>(By Al Mamun)</p>
+      </div>
+      <!-- form div here... -->
+      <div id="login-form">
+        <form method="post" action="/">
+          <input
+            type="text"
+            name="username"
+            placeholder="enter mobile or email"
+            <% if(typeof data != 'undefined'){ %>
+            value="<%= data.username %>"
+            <% } %>
+          />
+          <% if(typeof errors.username != 'undefined'){ %>
+          <p class="error show"><%= errors.username.msg %></p>
+          <% } %>
+          <input type="password" name="password" placeholder="enter password" />
+          <% if(typeof errors.password!= 'undefined'){ %>
+          
+          <p class="error show"><%= errors.password.msg %></p>
+
+          <% } %>
+          <% if(typeof errors.common != 'undefined'){ %>
+            <p class="error show"><%= errors.common.msg %></p>
+            
+            <% } %>
+          <input type="submit" value="Login" />
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
