@@ -109,6 +109,48 @@ exports.addConversation = async (req, res, next) => {
   }
 };
 
+// deleting conversation
+exports.deleteConversation = async (req, res, next) => {
+  try {
+    console.log("mamun id:" + req.params.conversation_id);
+    const messages = await Message.find({
+      conversation_id: req.params.conversation_id,
+    });
+
+    // if (messages) {
+    //   console.log("inside loop1*: " + messages.length);
+    // }
+
+    for (let i = 0; i < messages.length; i++) {
+      // console.log("inside loop1: entering1");
+      // console.log(JSON.stringify(messages[i].attachments));
+      let length = messages[i].attachments;
+      if (length) {
+        // console.log("inside loop2:"+ messages[i].attachments.length);
+        for (let j = 0; j < messages[i].attachments.length; j++) {
+          // console.log("inside loop: " + messages[i].attachments[j].public_id);
+
+          let imageId = messages[i].attachments[j].public_id;
+          await cloudinary.uploader.destroy(imageId);
+          // console.log("i= " + i + "j= " + j);
+        }
+      }
+    }
+    const status = await Message.deleteMany({
+      conversation_id: req.params.conversation_id,
+    });
+
+    // conversation delete option will be included here...next i will create a drop down menu and there will be two option: 1. delete just messages 2. delete the conversation and messages
+
+    const conversation = await Conversation.findByIdAndDelete({
+      _id: req.params.conversation_id,
+    });
+    res.json({
+      conversation,
+    });
+  } catch (err) {}
+};
+
 // get all messages of a conversation
 exports.getMessages = async (req, res, next) => {
   try {
@@ -140,44 +182,27 @@ exports.getMessages = async (req, res, next) => {
 
 // send message
 exports.sendMessage = async (req, res, next) => {
-  // console.log("send message in inboxcontroller is hitted");
   if (req.body.message || (req.files && req.files.length > 0)) {
     try {
-      // console.log("try block is hitted");
-      // save message text/attachment in database
       let attachments = null;
+
       if (req.files && req.files.length > 0) {
         attachments = [];
-        console.log("path:" + req.files.path);
+        for (let i = 0; i < req.files.length; i++) {
+          const result = await cloudinary.uploader.upload(req.files[i].path, {
+            folder: "cs_research_chat/message_res",
+          });
 
-        req.files.map(async(picture) => {
-
-          const result = await cloudinary.uploader.upload(
-            picture.path,
-              {
-              folder: "cs_research_chat/message_res",
-              use_filename: true,
-              unique_filename: false,
-            }
-          );          
-          
-            attachments.push({public_id: result.public_id,
-            url: result.url})
-
-        });
+          attachments.push({
+            public_id: result.public_id,
+            url: result.secure_url,
+          });
+        }
       }
-
-      console.log(attachments);
-
-      // req.files.forEach((file) => {
-      //   attachments.push(result);
-      // });
-
-      console.log(`from send message controller: ${req.body.message}`);
 
       const newMessage = new Message({
         text: req.body.message,
-        attachment: attachments,
+        attachments: attachments,
         sender: {
           id: req.user.userId,
           name: req.user.username,
@@ -209,7 +234,7 @@ exports.sendMessage = async (req, res, next) => {
             avatar: req.user.avatar || null,
           },
           message: req.body.message,
-          attachment: attachments,
+          attachments: attachments,
           date_time: result.date_time,
         },
       });

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const messageSchema = mongoose.Schema(
   {
     text: String,
-    attachment: [
+    attachments: [
       {
         public_id: String,
         url: String, 

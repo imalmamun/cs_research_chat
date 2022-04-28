@@ -4,6 +4,9 @@ const path = require("path");
 const { unlink } = require("fs");
 const cloudinary = require("../utilities/cloudinary");
 
+
+
+
 // create users page
 exports.getUsers = async (req, res, next) => {
   try {
@@ -16,6 +19,9 @@ exports.getUsers = async (req, res, next) => {
     next(err);
   }
 };
+
+
+
 
 //  add user
 exports.addUser = async (req, res, next) => {
@@ -76,21 +82,14 @@ exports.addUser = async (req, res, next) => {
   }
 };
 
+
+
 // deleting user
 exports.removeUser = async (req, res, next) => {
   try {
     const user = await User.findByIdAndDelete({
       _id: req.params.id,
     });
-
-    // removing the image if any
-    // if (user.avatar) {
-    //   unlink(
-    //     path.join(__dirname, `/../public/uploads/avatars/${user.avatar}`),
-    //     (err) => console.log(err)
-    //   );
-    // }
-
     const imageId = user.avatar.public_id;
 
     await cloudinary.uploader.destroy(imageId);

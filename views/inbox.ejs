@@ -7,7 +7,7 @@
       <div id="conversation-list">
         <% if(typeof data != "undefined"){ %>
           <% data.forEach((conversation) => { %>
-            <!-- conversation creator is same to logged in user, so we need to show participant name and avatar -->
+<!-- conversation creator is same to logged in user, so we need to show participant name and avatar -->
             <% if(conversation.creator.id == loggedInUser.userId){ %>
               <div class="conversation active" onclick="getMessages('<%= conversation._id %>', '<%= conversation.participant.name %>')">
                 <% if(conversation.participant.avatar){ %>
@@ -46,7 +46,9 @@
       </div>
       <div id="chat-title">
         <span id="chat-title-name">Conversation Name</span>
-        <img src="./images/trash.png" alt="Delete Conversation" />
+       
+        <img class="trash" src="./images/trash.png" alt="Delete Conversation" onclick="deleteConversation(this.id)"/>
+     
       </div>
       <!-- <div id="chat-message-list">
         <div class="message-row other-message">
@@ -90,37 +92,45 @@
   <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
     <script>
       const chatTitleName = document.querySelector("#chat-title-name");
+      const trash = document.querySelector(".trash");
       const form = document.querySelector("#chat-form");
       let participant = null;
       let current_conversation_id;
       const loggedinUserId = '<%= loggedInUser.userId %>';
       const messageContainer = document.querySelector("#chat-message-list");
 
-      // socket initialization
+
+
+
+
+// socket initialization
       const socket = io.connect('<%= process.env.APP_URL %>');
-      // handle new and live incomming messages from socket
+// handle new and live incomming messages from socket
       socket.on("new_message", data=> {
-        // will enter only if current conversation is on in any client sender/receiver
+// will enter only if current conversation is on in any client sender/receiver
         if(data.message.conversation_id === current_conversation_id){
-           // message class
+// message class
            const messageClass = data.message.sender.id === loggedinUserId ? 'you-message' : 'other-message';
 
 
           let senderAvatar = data.message.sender.avatar ? `<img class="participant_image" src="${data.message.sender.avatar.url}" alt="${data.message.sender.name}" />` : `<img class="participant_image" src="./images/nophoto.png" alt="${data.message.sender.name}" />`;
           //  console.log(data.message.sender.avatar);
           let showAvatar = data.message.sender.id === loggedinUserId ? '' : `${senderAvatar}`;
-            // message attachments
+
+
+// message attachments
           let attachments = '<div class="attachments">';
-          if(data.message.attachment && data.message.attachment.length > 0) {
-              data.message.attachment.forEach(attachment => {
-              const extension = attachment.split('.').pop();
-              // console.log(extension);
+          if(data.message.attachments && data.message.attachments.length > 0) {
+            console.log(data.message.attachments.url);
+              data.message.attachments.forEach(attachment => {
+              const extension = attachment.url.split(/[#?]/)[0].split('.').pop().trim();
+              console.log('extensiont: '+extension);
               if(extension == "pdf"){
 
-                attachments += `<div class="pdf-attachment-div"><a href="./uploads/attachments/${attachment}" target="_blank">${attachment}<img src="./images/attachment.png" alt="pdf attachment" /></a></div>`;
+                attachments += `<div class="pdf-attachment-div"><a href="${attachment.url}" target="_blank">${attachment.url}<img src="./images/attachment.png" alt="pdf attachment" /></a></div>`;
 
               } else{
-               attachments += `<img class="attachment_image" src="./uploads/attachments/${attachment}" /> `;
+               attachments += `<img class="attachment_image" src="${attachment.url}" /> `;
               }
             });
           }
@@ -143,7 +153,11 @@
       })
 
 
-      // get all messages
+
+
+
+
+// get all messages
       async function getMessages(conversation_id, current_conversation_name){
         let response = await fetch(`/inbox/messages/${conversation_id}`
         );
@@ -165,18 +179,18 @@
                 // message attachments
                 let attachments = '<div class="attachments">';
 
-                  if(message.attachment && message.attachment.length > 0) {
-                    message.attachment.forEach(attachment => {
-                      const extension = attachment.split('.').pop();
+                  if(message.attachments && message.attachments.length > 0) {
+                    message.attachments.forEach(attachment => {
+                      const extension = attachment.url.split(/[#?]/)[0].split('.').pop().trim();
               console.log(extension);
-              if(extension == "pdf"){
+              console.log(JSON.stringify(attachment))
 
-                // <img src="./images/attachment.png" alt="Add Attachment" />
-                attachments += `<div class="pdf-attachment-div"><a href="./uploads/attachments/${attachment}" target="_blank">${attachment}<img src="./images/attachment.png" alt="pdf attachment" /></a></div>`;
+// pdf attachments
+              if(extension == "pdf"){            
+                attachments += `<div class="pdf-attachment-div"><a href="./uploads/attachments/${attachment.url}" target="_blank">${attachment.url}<img src="./images/attachment.png" alt="pdf attachment" /></a></div>`;
  
               } else{
-
-                attachments += `<img class="attachment_image" src="./uploads/attachments/${attachment}" /> `;
+                attachments += `<img class="attachment_image" src="${attachment.url}" /> `;
 
               }
                       // attachments += `<img src="./uploads/attachments/${attachment}" /> `;
@@ -200,6 +214,7 @@
               console.log('no masseged fetched');
                                                            }
               chatTitleName.textContent = current_conversation_name;
+              trash.setAttribute('id', `${conversation_id}`)
         }
         }else{
           // toast message for failure
@@ -214,7 +229,6 @@
           text: "Error sending message",
           duration: 1000,
         });
-        // console.log('submitted message');
         let formData = new FormData(form);
         formData.append("receiverId", participant.id);
         formData.append("receiverName", participant.name);
@@ -237,6 +251,27 @@
           sendMessageFailureToast.showToast();
         }
       }
+
+
+
+
+// delete conversation function
+deleteConversation = async(conversationId) => {
+  console.log("clicked deleteconversation"+ conversationId)
+    const response = await fetch(`/inbox/delete/${conversationId}`, {
+      method: "DELETE",
+    })
+
+    const result = response.json();
+    if(result){
+      
+
+      alert("conversation and messages both deleted successfully");
+      location.reload();
+    }else{
+      alert("conversation delete failed");
+    }
+}
       
     </script>
   </body>
