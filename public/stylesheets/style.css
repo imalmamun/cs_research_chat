@@ -471,7 +471,7 @@ input[type="submit"]:active {
 
 .message-row {
   display: grid;
-  /* grid-template-columns: 70%; */
+  grid-template-columns: 70%;
   margin-bottom: 20px;
 }
 
@@ -489,7 +489,7 @@ input[type="submit"]:active {
 
 .you-message .message-content {
   justify-items: end;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
   grid-column-gap: 15px;
 }
 
@@ -523,6 +523,15 @@ input[type="submit"]:active {
   color: var(--dark);
   border: 2px solid var(--dark);
   border-radius: 14px 14px 0 14px;
+  /* Careful, this breaks the word wherever it is without a hyphen */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  /* Adds a hyphen where the word breaks */
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 
 .other-message .message-text {
@@ -530,6 +539,15 @@ input[type="submit"]:active {
   color: #111;
   border: 2px solid var(--dark);
   border-radius: 14px 14px 0 14px;
+  /* Careful, this breaks the word wherever it is without a hyphen */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  /* Adds a hyphen where the word breaks */
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 
 #chat-form {
