@@ -21,6 +21,8 @@
       <div class="menu-item"><a href="/users">Users</a></div>
       <div class="menu-item"><a href="/">Login</a></div>
       <% } else { %>
+      
+      <div class="menu-item"><a href="#" onclick="openRoomModal()">Create Room</a></div>
       <div class="menu-item"><a href="/inbox">Inbox</a></div>
       <div class="menu-item"><a href="/users">Users</a></div>
       <% if(loggedInUser && loggedInUser.avatar){ %>
@@ -42,6 +44,10 @@
       <% } } %>
     </div>
 
+    <%- include("./create-room-modal.ejs");%>
+   
+  
+
     <script>
       const logoutToast = Toastify({
         text: "You are being logged out...",
@@ -58,6 +64,8 @@
           window.location.replace("/");
         }, 10000);
       }
+
+      
     </script>
   </body>
 </html>

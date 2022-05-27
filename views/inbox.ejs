@@ -46,8 +46,26 @@
       </div>
       <div id="chat-title">
         <span id="chat-title-name">Conversation Name</span>
+        <div class="iconBtn">
+          <img class="trash" src="./images/call.png" alt="Voice Call" onclick="voiceCall(this.id)"/>
+          <img class="trash" src="./images/video-camera.png" alt="Video Call" onclick="videoCall(this.id)"/>
+          <img class="more-option" src="./images/more.png" onclick="openOption()" alt="more"/>
+
+          <!-- options -->
+          <div class="option-container">
+            <div class="option">
+              <img class="trash" src="./images/trash.png" alt="Delete Conversation" onclick="deleteConversation(this.id)"/>
+            </div>
+            <div class="option">
+              <img class="trash" src="./images/trash.png" alt="Delete Conversation" onclick="deleteConversation(this.id)"/>
+            </div>
+  
+          </div>
+        </div>
+
+        
        
-        <img class="trash" src="./images/trash.png" alt="Delete Conversation" onclick="deleteConversation(this.id)"/>
+       
      
       </div>
       <!-- <div id="chat-message-list">
@@ -91,6 +109,9 @@
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.min.js"></script> -->
   <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
     <script>
+      const moreOption = document.querySelector(".more-option");
+      const optionContainer = document.querySelector(".option-container");
+      const option = document.querySelector(".option");
       const chatTitleName = document.querySelector("#chat-title-name");
       const trash = document.querySelector(".trash");
       const form = document.querySelector("#chat-form");
@@ -272,7 +293,36 @@ deleteConversation = async(conversationId) => {
       alert("conversation delete failed");
     }
 }
-      
+
+
+// calling functions...
+ function voiceCall(){
+   alert("Voice call...", "calling...");
+ }
+
+ function videoCall(){
+   alert("Video call...", "calling...");
+ }
+
+
+//  opening more opiton
+function openOption(){
+  optionContainer.style.display= "block";
+  
+}
+
+
+window.addEventListener("click", closeOption());
+    function closeOption(){
+  var current = window.getComputedStyle(optionContainer).display;
+ console.log("al")
+  if(current == "block"){
+    optionContainer.style.display= "none";
+    }
+    // else{
+    //   optionContainer.style.display= "block";
+    // }
+  }
     </script>
   </body>
   

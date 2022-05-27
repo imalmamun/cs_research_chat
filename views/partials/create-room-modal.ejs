@@ -1,0 +1,35 @@
+<!-- modal for creating room -->
+<div class="modal-wrapper" id="create-room-modal">
+  <div class="modal">
+    <a href="#" onclick="closeRoomModal()" class="modal-close">+</a>
+    <div class="modal-title">
+      <h2>Enter a Name to Create a Room</h2>
+    </div>
+    <div class="modal-body">
+      <form
+        method="post"
+        action="/users"
+        id="add-user-form"
+      >
+        <input type="text" placeholder="enter a room name" name="room" />
+
+        <p class="error room-link"></p>
+
+        
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const createRoomModal = document.querySelector("#create-room-modal");
+  //   createRoom.addEventListener("click", openModal);
+
+  function openRoomModal() {
+    createRoomModal.style.display = "block";
+  }
+  function closeRoomModal() {
+    createRoomModal.style.display = "none";
+  }
+</script>

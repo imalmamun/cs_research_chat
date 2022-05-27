@@ -20,7 +20,7 @@
   /* my colors */
   --light_pink: #d7a0d6;
   --light_green: #cfe363;
-  --beguni: #9b50f3;
+  --beguni: #baccfc;
   --pink: #fc59dd;
   --skycombo1: #bdf3f1;
 }
@@ -236,7 +236,7 @@ input[type="submit"]:active {
 /* menu related styles */
 .menu {
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(4, auto);
   justify-content: end;
   align-content: center;
   height: 40px;
@@ -439,9 +439,11 @@ input[type="submit"]:active {
 }
 
 #chat-title {
-  display: grid;
-  grid: 36px / 1fr 36px;
+  /* display: grid; */
+  display: flex;
+  /* grid: 36px / 1fr 36px; */
   align-content: center;
+  justify-content: space-between;
   align-items: center;
   grid-area: chat-title;
   color: #ffffff;
@@ -451,16 +453,46 @@ input[type="submit"]:active {
   box-shadow: 0 2px 3px -2px rgba(0, 0, 0, 0.75);
   padding: 0 20px;
 }
-
-#chat-title > img {
+.iconBtn {
+  display: flex;
+}
+.iconBtn > :nth-child(1) {
+  transform: scale(0.5);
+  visibility: visible;
+}
+.iconBtn > :nth-child(2) {
+  transform: scale(0.5);
+  visibility: visible;
+}
+.iconBtn > :nth-child(3) {
+  transform: scale(0.5);
+  visibility: visible;
+}
+.iconBtn > :nth-child(4) {
+  transform: scale(0.5);
+  visibility: visible;
+}
+#iconBtn > img {
   cursor: pointer;
   height: 30px;
+  width: 30px;
 }
 
 #chat-title > img:hover {
   transform: scale(1.05);
 }
 
+.option-container{
+  display: none;
+  padding: 10px;
+  background: var(--secondary);
+  z-index: 5;
+  position: absolute;
+  margin-top: 68px;
+  /* width: 20px; */
+  right:140px;
+
+}
 #chat-message-list {
   grid-area: chat-message-list;
   display: flex;
@@ -477,6 +509,8 @@ input[type="submit"]:active {
 
 .message-content {
   display: grid;
+  word-break: break-word;
+  width: 100%;
 }
 
 .message-content img {
@@ -683,6 +717,10 @@ input[type="submit"]:active {
 }
 
 @media only screen and (max-width: 600px) {
+  * {
+    padding: 0;
+    margin: 0;
+  }
   #login-container {
     width: 80%;
     height: 80vh;
@@ -690,9 +728,75 @@ input[type="submit"]:active {
       "branding"
       "login-form";
   }
-
+  #chat-container {
+    position: bottom;
+  }
+  .other-message .message-content {
+    grid-template-columns: 15px 1fr 1fr;
+    grid-column-gap: 15px;
+  }
+  .other-message .message-row {
+    display: grid;
+    grid-template-columns: 100%;
+    margin-bottom: 20px;
+  }
+  .other-message .message-text {
+    width: 40vw;
+  }
+  .you-message .message-row {
+    display: grid;
+    grid-template-columns: 90%;
+    margin-bottom: 20px;
+  }
+  .message-content img {
+    width: 25px;
+  }
+  .message-text {
+    padding: 6px 10px;
+    font-size: 1.3rem;
+    margin-bottom: 3px;
+  }
+  .message-time {
+    font-size: 0.7rem;
+  }
   #left-column {
     display: none;
+  }
+
+  /* modal */
+  .modal {
+    width: 95%;
+  }
+  #chat-container {
+    width: 100%;
+  }
+  #chat-container {
+    height: 94vh;
+  }
+  #search-container {
+    border-radius: 0;
+  }
+  #chat-title {
+    border-radius: 0;
+  }
+  #chat-container {
+    border-radius: 0;
+  }
+  .iconBtn > :nth-child(1) {
+    transform: scale(0.5);
+    visibility: hidden;
+  }
+  .iconBtn > :nth-child(2) {
+    transform: scale(0.5);
+    visibility: hidden;
+  }
+  .iconBtn > :nth-child(3) {
+    transform: scale(0.5);
+    visibility: hidden;
+  }
+  .iconBtn > :nth-child(4) {
+    transform: scale(0.5);
+    visibility: visible;
   }
 }
 
@@ -802,7 +906,7 @@ input[type="submit"]:active {
 @media only screen and (max-width: 600px) {
   .manageUser-container {
     width: 95%;
-    min-width: 70%;
+    min-width: 80%;
     padding: 1rem;
     height: 87vh;
   }
@@ -842,7 +946,8 @@ input[type="submit"]:active {
   
 } */
 .login_image {
-  border-radius: 50%;
+  transform: scale(2);
+  /* border-radius: 50%; */
 }
 
 .attachment_image {
