@@ -3,20 +3,29 @@
   <div class="modal">
     <a href="#" onclick="closeRoomModal()" class="modal-close">+</a>
     <div class="modal-title">
-      <h2>Enter a Name to Create a Room</h2>
+      <h2>Generate A Room Link</h2>
     </div>
     <div class="modal-body">
       <form
         method="post"
-        action="/users"
-        id="add-user-form"
+        action="/room/generateroomlink"
+        id="generate-room-link"
       >
-        <input type="text" placeholder="enter a room name" name="room" />
+      
+        <div class="room-link-container">
+          <div class="room-link">
+            <span id="roomLink" onclick="copied()"
+              ></span
+            >
+            <span class="new-tab">
+              <!-- <a id="RedirectRoomLink" href="http://localhost:5000/room" target="_blank">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> </a
+            > -->
+          </span>
+          </div>
+        </div>
 
-        <p class="error room-link"></p>
-
-        
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Generate" />
       </form>
     </div>
   </div>
@@ -24,6 +33,7 @@
 
 <script>
   const createRoomModal = document.querySelector("#create-room-modal");
+
   //   createRoom.addEventListener("click", openModal);
 
   function openRoomModal() {
@@ -32,4 +42,48 @@
   function closeRoomModal() {
     createRoomModal.style.display = "none";
   }
+
+  function copied() {
+    var copyText = document.querySelector("#roomLink");
+    var textArea = document.createElement("textarea");
+    textArea.value = copyText.innerHTML;
+    console.log(copyText.innerHTML);
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      var successful = document.execCommand("copy");
+      var msg = successful ? "successful" : "unsuccessful";
+      console.log("Copying text command was " + msg);
+    } catch (err) {
+      console.log("Oops, unable to copy");
+    }
+
+    alert("copied: " + textArea.value);
+  }
+
+  // form controller
+  const RoomForm = document.querySelector("#generate-room-link");
+  const redirectSpan = document.querySelector('.new-tab');
+  RoomForm.onsubmit = async (event) => {
+    event.preventDefault();
+   
+    let roomLink = document.querySelector("#roomLink");
+    let RedirectRoomLink = document.querySelector("#RedirectRoomLink");
+    console.log(roomLink.innerHTML);
+    let response = await fetch("/room/generateroomlink");
+    var result = await response.json();
+    console.log(result);
+    roomLink.innerHTML = '<%= process.env.APP_URL %>'+ "/room/"+ result.roomId;
+    // RedirectRoomLink.href= "<%= process.env.APP_URL %>'+ "/room/"+ result.roomId";
+    var a = document.createElement('a');
+    var redirectLink = '<%= process.env.APP_URL %>'+ "/room/"+ result.roomId;
+    a.setAttribute('href', redirectLink);
+    a.innerHTML = `<i class="fa-solid fa-arrow-up-right-from-square"></i>`;
+    // document.getElementsByClassName('new-tab').appendChild(a);\roomLink
+    console.log(a);
+    a.target = "_blank";
+    redirectSpan.appendChild(a);
+  };
 </script>

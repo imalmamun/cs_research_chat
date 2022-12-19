@@ -19,10 +19,15 @@ exports.getLogin = (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
+    console.log(req.body);
     const user = await User.findOne({
       $or: [{ email: req.body.username }, { mobile: req.body.username }],
     });
+    const a = await User.findOne({email:
+      "imalmamun100@gmail.com"})
     // checking user really exist then we will check the password right or not
+    console.log(user);
+    console.log(a);
     if (user) {
       const isValidPassword = await bcrypt.compare(
         req.body.password,
@@ -60,9 +65,11 @@ exports.login = async (req, res, next) => {
         );
       }
     } else {
+      console.log("eito error");
       throw createError("Login failed! Please try again.");
     }
   } catch (err) {
+    console.log(err);
     res.render("index", {
       data: {
         username: req.body.username,

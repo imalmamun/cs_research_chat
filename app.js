@@ -9,6 +9,7 @@ const http = require("http");
 const io = require("socket.io");
 const cors = require("cors");
 
+
 // const ejsLint = require("ejs-lint");
 
 // internal imports
@@ -64,10 +65,13 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 const loginRouter = require("./router/loginRouter");
 const usersRouter = require("./router/usersRouter");
 const inboxRouter = require("./router/inboxRouter");
+const roomRouter = require("./router/roomRouter");
 
 app.use("/", loginRouter);
 app.use("/users", usersRouter);
 app.use("/inbox", inboxRouter);
+app.use("/room", roomRouter);
+
 
 // not found page
 app.use(notFoundHandler);

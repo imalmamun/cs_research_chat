@@ -1,0 +1,40 @@
+<%- include("./partials/header.ejs");%>
+<div class="chat-wrapper">
+<div class="room-container">
+<!-- all video -->
+    <video id="remote-video" autoplay playsinline></video>
+    <div id="moveable">
+      <p id="local-video-text">No webcam input</p>
+      <video id="local-video" autoplay muted playsinline></video>
+    </div>
+
+    <!-- all button -->
+    <div class="multi-button">
+      <div class="button-container">
+        <button>
+          <i id="mic-icon" class="fa-solid fa-microphone"></i>
+        </button>
+      </div>
+      <div class="button-container">
+        <button>
+          <i id="video-icon" class="fa-solid fa-video"></i>
+        </button>
+      </div>
+      <div class="button-container">
+        <button>
+            <!-- <i id="call-cut" class="fa-solid fa-phone-xmark"></i> -->
+            <i id="call-cut" class="fa-solid fa-phone-slash"></i>
+        </button>
+      </div>
+    </div>
+
+
+</div>
+</div>
+   
+<script>
+  const localVideoGlobalWrap = document.getElementById("moveable");
+  // draggable(localVideoGlobalWrap);
+</script>
+  </body>
+</html>
